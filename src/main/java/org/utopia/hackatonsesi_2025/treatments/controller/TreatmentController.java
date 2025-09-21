@@ -5,8 +5,7 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.utopia.hackatonsesi_2025.treatments.dto.ProcedureCatalogResponseDTO;
-import org.utopia.hackatonsesi_2025.treatments.dto.ProcedureScheduleRequestDTO;
+import org.utopia.hackatonsesi_2025.treatments.dto.*;
 import org.utopia.hackatonsesi_2025.treatments.model.Specialty;
 import org.utopia.hackatonsesi_2025.treatments.service.TreatmentService;
 import org.utopia.hackatonsesi_2025.scheduling.dto.AppointmentResponseDTO;
@@ -29,5 +28,42 @@ public class TreatmentController {
     public AppointmentResponseDTO schedule(@Valid @RequestBody ProcedureScheduleRequestDTO dto) {
         return service.schedule(dto);
     }
-}
 
+    // ===== Evolução do tratamento =====
+
+    @GetMapping("/orders")
+    @PreAuthorize("hasRole('DENTIST')")
+    public List<ProcedureOrderResponseDTO> listOrdersByCpf(@RequestParam("cpf") String cpf) {
+        return service.listOrdersByCpf(cpf);
+    }
+
+    @GetMapping("/orders/{id}")
+    @PreAuthorize("hasRole('DENTIST')")
+    public ProcedureOrderResponseDTO getOrder(@PathVariable Long id) {
+        return service.getOrder(id);
+    }
+
+    @PatchMapping("/orders/{id}/notes")
+    @PreAuthorize("hasRole('DENTIST')")
+    public ProcedureOrderResponseDTO updateNotes(@PathVariable Long id, @Valid @RequestBody ProcedureOrderNotesUpdateDTO dto) {
+        return service.updateOrderNotes(id, dto);
+    }
+
+    @GetMapping("/orders/{id}/analyses")
+    @PreAuthorize("hasRole('DENTIST')")
+    public List<TreatmentAnalysisResponseDTO> listAnalyses(@PathVariable Long id) {
+        return service.listAnalyses(id);
+    }
+
+    @PostMapping("/orders/{id}/analyses")
+    @PreAuthorize("hasRole('DENTIST')")
+    public TreatmentAnalysisResponseDTO addAnalysis(@PathVariable Long id, @Valid @RequestBody TreatmentAnalysisCreateDTO dto) {
+        return service.addAnalysis(id, dto);
+    }
+
+    @PostMapping("/orders/{id}/complete")
+    @PreAuthorize("hasRole('DENTIST')")
+    public ProcedureOrderResponseDTO completeOrder(@PathVariable Long id) {
+        return service.completeOrder(id);
+    }
+}

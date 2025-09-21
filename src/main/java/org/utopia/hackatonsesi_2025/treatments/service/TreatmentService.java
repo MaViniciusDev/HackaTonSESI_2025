@@ -13,8 +13,7 @@ import org.utopia.hackatonsesi_2025.scheduling.dto.AppointmentResponseDTO;
 import org.utopia.hackatonsesi_2025.scheduling.model.Appointment;
 import org.utopia.hackatonsesi_2025.scheduling.model.AppointmentStatus;
 import org.utopia.hackatonsesi_2025.scheduling.repository.AppointmentRepository;
-import org.utopia.hackatonsesi_2025.treatments.dto.ProcedureCatalogResponseDTO;
-import org.utopia.hackatonsesi_2025.treatments.dto.ProcedureScheduleRequestDTO;
+import org.utopia.hackatonsesi_2025.treatments.dto.*;
 import org.utopia.hackatonsesi_2025.treatments.model.*;
 import org.utopia.hackatonsesi_2025.treatments.repository.*;
 
@@ -25,6 +24,7 @@ public class TreatmentService {
     private final ProcedureCatalogRepository catalogRepository;
     private final DentistProfileRepository dentistProfileRepository;
     private final ProcedureOrderRepository orderRepository;
+    private final TreatmentAnalysisRepository analysisRepository;
     private final AppointmentRepository appointmentRepository;
     private final PatientRepository patientRepository;
 
@@ -47,7 +47,6 @@ public class TreatmentService {
         }
         Patients patient = patientRepository.findByCpf(dto.patientCpf())
                 .orElseThrow(() -> new IllegalArgumentException("Paciente não encontrado pelo CPF"));
-        // Verificar se o paciente já teve consulta COMPLETED com algum dentista dessa especialidade
         boolean hasCompletedWithSpecialty = appointmentRepository
                 .findByPatient_Cpf(dto.patientCpf(), Sort.by(Sort.Direction.DESC, "start"))
                 .stream()
@@ -99,10 +98,86 @@ public class TreatmentService {
         );
     }
 
+    // ===== Evolução do tratamento =====
+
+    @Transactional(readOnly = true)
+    public List<ProcedureOrderResponseDTO> listOrdersByCpf(String cpf) {
+        return orderRepository.findByPatient_CpfAndStatus(cpf, ProcedureOrderStatus.SCHEDULED)
+                .stream().map(this::toOrderDto).collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public ProcedureOrderResponseDTO getOrder(Long id) {
+        ProcedureOrder order = orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Ordem de procedimento não encontrada"));
+        return toOrderDto(order);
+    }
+
+    @Transactional
+    public ProcedureOrderResponseDTO updateOrderNotes(Long id, ProcedureOrderNotesUpdateDTO dto) {
+        ProcedureOrder order = orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Ordem de procedimento não encontrada"));
+        order.setNotes(dto.notes());
+        order = orderRepository.save(order);
+        return toOrderDto(order);
+    }
+
+    @Transactional(readOnly = true)
+    public List<TreatmentAnalysisResponseDTO> listAnalyses(Long orderId) {
+        return analysisRepository.findByOrder_IdOrderByCreatedAtAsc(orderId).stream()
+                .map(this::toAnalysisDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional
+    public TreatmentAnalysisResponseDTO addAnalysis(Long orderId, TreatmentAnalysisCreateDTO dto) {
+        ProcedureOrder order = orderRepository.findById(orderId)
+                .orElseThrow(() -> new IllegalArgumentException("Ordem de procedimento não encontrada"));
+        TreatmentAnalysis a = TreatmentAnalysis.builder()
+                .order(order)
+                .summary(dto.summary())
+                .description(dto.description())
+                .build();
+        a = analysisRepository.save(a);
+        return toAnalysisDto(a);
+    }
+
+    @Transactional
+    public ProcedureOrderResponseDTO completeOrder(Long id) {
+        ProcedureOrder order = orderRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Ordem de procedimento não encontrada"));
+        order.setStatus(ProcedureOrderStatus.COMPLETED);
+        order = orderRepository.save(order);
+        return toOrderDto(order);
+    }
+
     private ProcedureCatalogResponseDTO toDto(ProcedureCatalog p) {
         return new ProcedureCatalogResponseDTO(
                 p.getCode(), p.getName(), p.getRequiredSpecialty(), p.getMinDurationMinutes(), p.getMaxDurationMinutes(), p.isMultiSession()
         );
     }
-}
 
+    private ProcedureOrderResponseDTO toOrderDto(ProcedureOrder o) {
+        return new ProcedureOrderResponseDTO(
+                o.getId(),
+                o.getPatient().getCpf(),
+                o.getProcedure().getCode(),
+                o.getProcedure().getName(),
+                o.getProcedure().getRequiredSpecialty(),
+                o.getSpecialistUsername(),
+                o.getStatus(),
+                o.getCreatedAt(),
+                o.getScheduledAppointmentId(),
+                o.getNotes()
+        );
+    }
+
+    private TreatmentAnalysisResponseDTO toAnalysisDto(TreatmentAnalysis a) {
+        return new TreatmentAnalysisResponseDTO(
+                a.getId(),
+                a.getSummary(),
+                a.getDescription(),
+                a.getCreatedAt()
+        );
+    }
+}

@@ -3,17 +3,22 @@ package org.utopia.hackatonsesi_2025.config;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.utopia.hackatonsesi_2025.users.security.AppUserDetailsService;
+import org.utopia.hackatonsesi_2025.users.security.JwtAuthenticationFilter;
 
 @Configuration
 @EnableMethodSecurity
@@ -22,17 +27,21 @@ public class SecurityConfig {
     @Bean
     SecurityFilterChain securityFilterChain(HttpSecurity http,
                                             DaoAuthenticationProvider jpaAuthProvider,
-                                            DaoAuthenticationProvider inMemoryAuthProvider) throws Exception {
+                                            DaoAuthenticationProvider inMemoryAuthProvider,
+                                            JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         return http
-                .csrf(csrf -> csrf.disable())
+                .csrf(AbstractHttpConfigurer::disable)
+                .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(inMemoryAuthProvider)
                 .authenticationProvider(jpaAuthProvider)
                 .authorizeHttpRequests(reg -> reg
+                        .requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/users/register").permitAll()
                         .requestMatchers(HttpMethod.POST, "/api/users/register").permitAll()
 
                         .requestMatchers("/api/procedures/catalog").hasAnyRole("PATIENT","RECEPTION","DENTIST")
                         .requestMatchers("/api/procedures/schedule").hasAnyRole("PATIENT","RECEPTION")
+                         .requestMatchers("/api/procedures/orders/**").hasRole("DENTIST")
 
                         .requestMatchers("/api/patients/self-register").hasRole("PATIENT")
                         .requestMatchers("/api/patients/intake").hasRole("RECEPTION")
@@ -51,9 +60,14 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.POST, "/api/referrals").hasRole("DENTIST")
                         .requestMatchers(HttpMethod.GET, "/api/referrals/pending").hasAnyRole("PATIENT","RECEPTION")
                         .requestMatchers(HttpMethod.POST, "/api/referrals/*/schedule").hasAnyRole("PATIENT","RECEPTION")
+
+                        .requestMatchers("/api/records/**").hasRole("DENTIST")
                         .anyRequest().authenticated()
                 )
-                .httpBasic(Customizer.withDefaults())
+                .exceptionHandling(ex -> ex.authenticationEntryPoint((req, res, e) -> res.sendError(401)))
+                .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
+                .httpBasic(AbstractHttpConfigurer::disable)
+                .formLogin(AbstractHttpConfigurer::disable)
                 .build();
     }
 
@@ -85,5 +99,10 @@ public class SecurityConfig {
     @Bean
     PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
+    }
+
+    @Bean
+    AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
+        return configuration.getAuthenticationManager();
     }
 }
