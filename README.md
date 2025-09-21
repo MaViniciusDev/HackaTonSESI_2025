@@ -1,4 +1,4 @@
-# 🦷 Sistema de Gestão de Clínica Odontológica - UTOPIA
+# 🦷 Sistema de Gestão de Clínica Odontológica - SESI+
 
 > **Projeto desenvolvido para o Hackathon SESI Saúde 2025**
 
