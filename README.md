@@ -6,7 +6,7 @@ Sistema completo de gestão para clínicas odontológicas, desenvolvido em Sprin
 
 ## 📋 Sobre o Projeto
 
-O **UTOPIA** é uma solução digital inovadora para modernizar a gestão de clínicas odontológicas, facilitando o dia a dia de dentistas, recepcionistas e pacientes. O sistema foi desenvolvido com foco na experiência do usuário e na eficiência operacional.
+O **SESI+** é uma solução digital inovadora para modernizar a gestão de clínicas odontológicas, facilitando o dia a dia de dentistas, recepcionistas e pacientes. O sistema foi desenvolvido com foco na experiência do usuário e na eficiência operacional.
 
 ### 🎯 Objetivos
 
@@ -22,8 +22,9 @@ O **UTOPIA** é uma solução digital inovadora para modernizar a gestão de cl�
 #### Para Pacientes
 - 📝 **Auto-cadastro** no sistema
 - 📅 **Agendamento online** de consultas
-- 👀 **Visualização** de procedimentos disponíveis
-- 📊 **Acompanhamento** do histórico de tratamentos
+- ✨ **Dashboard interativo** com calendário de consultas
+- 📊 **Acompanhamento visual** do progresso do tratamento
+- 📜 **Histórico** de consultas e procedimentos
 
 #### Para Recepcionistas  
 - 👥 **Cadastro e gestão** de pacientes
@@ -112,6 +113,9 @@ GET  /api/appointments/search-by-name     # Busca por nome
 ```http
 GET  /api/procedures/catalog              # Catálogo de procedimentos
 POST /api/procedures/schedule             # Agendar procedimento
+GET  /api/procedures/patient-progress     # Retorna o progresso do tratamento para o paciente logado
+GET  /api/procedures/catalog              # Catálogo de procedimentos
+POST /api/procedures/schedule             # Agendar procedimento
 GET  /api/procedures/orders               # Ordens de procedimento
 GET  /api/procedures/orders/{id}          # Detalhes da ordem
 POST /api/procedures/orders/{id}/complete # Completar procedimento
@@ -133,11 +137,32 @@ GET  /api/records/by-patient/{id}    # Prontuários do paciente
 PATCH /api/records/{id}              # Atualizar prontuário
 ```
 
+## 🖥️ Frontend - Interface do Paciente
+
+O frontend foi desenvolvido com HTML5, CSS3 e JavaScript puro (ES6+), focando em performance e manutenibilidade sem a necessidade de frameworks pesados. A interface é limpa, responsiva e consome a API do backend de forma assíncrona.
+
+### ✨ Destaques do Frontend
+- **Componentização com Web Components**: O menu lateral foi criado como um componente reutilizável, garantindo um código limpo e fácil de manter em todas as páginas.
+- **Layout Responsivo**: Utilização de Flexbox e CSS Grid para uma adaptação perfeita a telas de desktop, tablets e celulares.
+- **Dinamismo Puro**: Todos os dados (nome do paciente, calendário, progresso, etc.) são carregados dinamicamente através de chamadas à API, sem recarregar a página.
+
+
+### 📁 Estrutura de Arquivos (Frontend)
+```
+frontend/
+├── assets/
+│   ├── icon/
+│   └── imgs/
+├── dashboard/
+├── login/
+└── services/
+```
+
 ## 🛠️ Stack Tecnológica
 
 ### Backend
 - ☕ **Java 17** - Linguagem de programação
-- 🍃 **Spring Boot 3.5.6** - Framework principal
+- 🍃 **Spring Boot 3** - Framework principal
 - 🔒 **Spring Security** - Autenticação e autorização
 - 🗄️ **Spring Data JPA** - Persistência de dados
 - 🐘 **PostgreSQL** - Banco de dados
@@ -145,11 +170,18 @@ PATCH /api/records/{id}              # Atualizar prontuário
 - 📝 **Lombok** - Redução de boilerplate
 - ✅ **Bean Validation** - Validação de dados
 
+### Frontend
+- 🌐 **HTML5** - Estrutura semântica
+- 🎨 **CSS3** - Estilização moderna (Flexbox, Grid, Variáveis)
+- 💡 **JavaScript (ES6+)** - Lógica e dinamismo (Módulos, Async/Await)
+- 🧩 **Web Components** - Componentização reutilizável (Menu Lateral)
+- 🖼️ **Font Awesome** - Biblioteca de ícones
+
 ### Ferramentas
 - 🔨 **Maven** - Gerenciamento de dependências
 - 🐳 **Docker** (preparado) - Containerização
-- 📧 **Spring Mail** - Envio de emails
 
+  
 ## ⚙️ Configuração e Instalação
 
 ### 📋 Pré-requisitos
@@ -198,6 +230,11 @@ cd HackaTonSESI_2025
 ```
 
 4. Acesse: `http://localhost:8080`
+
+### 🖥️ Frontend
+1.  Não é necessário um passo de build.
+2.  Para rodar localmente, é **altamente recomendado** usar um servidor web simples devido ao uso de Módulos JavaScript (ESM). A forma mais fácil é usar a extensão **"Live Server"** no Visual Studio Code.
+3.  Com a extensão instalada, clique com o botão direito no arquivo `login.html` e selecione "Open with Live Server".
 
 ### 🗄️ Dados de Teste
 
