@@ -1,6 +1,8 @@
 package org.utopia.hackatonsesi_2025.treatments.controller;
 
 import jakarta.validation.Valid;
+
+import java.security.Principal;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -66,4 +68,17 @@ public class TreatmentController {
     public ProcedureOrderResponseDTO completeOrder(@PathVariable Long id) {
         return service.completeOrder(id);
     }
+
+    /**
+     * Retorna o progresso do tratamento formatado para o paciente logado.
+     * @param principal Objeto do Spring Security que contém os dados do usuário logado.
+     * @return Lista de passos do progresso.
+     */
+    @GetMapping("/patient-progress")
+    @PreAuthorize("hasRole('PATIENT')")
+    public List<PatientProgressDTO> getPatientProgress(Principal principal) {
+        // O principal.getName() retorna o 'username', que no seu caso é o CPF do paciente.
+        return service.getPatientProgressSteps(principal.getName());
+    }
 }
+

@@ -1,0 +1,223 @@
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');
+
+:root {
+    --teal: #06b6a9;
+    --blue-dark: #012b48;
+    --white: #ffffff;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f2f2f2;
+    background: linear-gradient(to right, var(--teal) 0%, #ffffff 100%);
+}
+
+.header {
+    background: var(--white);
+    padding: 12px 20px;
+}
+
+.logo {
+    height: 40px;
+}
+
+/* -------- CONTAINER -------- */
+.container {
+    width: 90%;
+    max-width: 1100px;
+    margin: 40px auto;
+    display: flex;
+    gap: 40px;
+    align-items: stretch;
+    position: relative;
+}
+
+/* -------- LADO ESQUERDO -------- */
+.left-side {
+    flex: 1;
+    position: relative;
+    border-radius: 30px;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    min-height: 500px;
+}
+
+.left-side img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+/* -------- LABELS SIMPLES COM MARGEM (ATUALIZADO) -------- */
+.labels {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.label {
+    background: var(--blue-dark);
+    color: var(--white);
+    font-weight: 700;
+    font-size: 1rem;
+    padding: 16px;
+    text-align: center;
+}
+
+/* Adiciona uma margem no topo da segunda label para separá-las */
+.label + .label {
+    margin-top: 4px; /* Ajuste este valor conforme o espaçamento desejado */
+}
+
+
+/* -------- LADO DIREITO -------- */
+.right-side {
+    flex: 1;
+    background: teal;
+    border-radius: 30px;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    transition: all 0.3s ease;
+}
+
+.right-side h2 {
+    text-align: center;
+    color: var(--white);
+    margin-bottom: 20px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.2);
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+}
+
+form input {
+    margin-bottom: 16px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1rem;
+}
+
+.forgot {
+    color: var(--white);
+    text-align: right;
+    margin-bottom: 16px;
+    text-decoration: none;
+    font-size: 0.9rem;
+}
+
+.btn-primary {
+    background: var(--blue-dark);
+    color: var(--white);
+    padding: 14px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+    margin-bottom: 16px;
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--blue-dark);
+    padding: 14px;
+    border: none;
+    border-radius: 25px;
+    font-size: 1rem;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+/* -------- ESTILOS DE FOCO PARA ACESSIBILIDADE -------- */
+form input:focus,
+.btn-primary:focus,
+.btn-secondary:focus {
+    outline: 3px solid var(--blue-dark);
+    outline-offset: 2px;
+}
+
+.signup {
+    text-align: center;
+    color: var(--white);
+    margin-bottom: 12px;
+    font-size: 0.95rem;
+}
+
+.signup a {
+    color: var(--white);
+    font-weight: bold;
+}
+
+/* -------- RESPONSIVO -------- */
+@media (max-width: 900px) {
+    .container {
+        flex-direction: column;
+        gap: 20px;
+        margin: 20px auto;
+    }
+
+    .right-side {
+        position: static;
+        transform: none;
+        width: 100%;
+        background: var(--teal);
+        color: initial;
+        border-radius: 20px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+        order: 1;
+        padding: 30px 25px;
+    }
+
+    .right-side h2 {
+        color: var(--blue-dark);
+        text-shadow: none;
+    }
+
+    .forgot {
+        color: var(--blue-dark);
+    }
+
+    .signup {
+        color: var(--blue-dark);
+    }
+
+    .signup a {
+        color: var(--teal);
+    }
+
+    .left-side {
+        width: 100%;
+        min-height: 300px;
+        border-radius: 20px;
+        order: 2;
+    }
+
+    form input {
+        background: var(--white);
+    }
+}
+
+@media (max-width: 500px) {
+    .right-side {
+        padding: 25px 15px;
+    }
+
+    form input,
+    .btn-primary,
+    .btn-secondary {
+        font-size: 0.9rem;
+    }
+}

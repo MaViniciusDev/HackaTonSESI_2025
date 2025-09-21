@@ -2,6 +2,7 @@ package org.utopia.hackatonsesi_2025.treatments.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Sort;
@@ -151,6 +152,8 @@ public class TreatmentService {
         return toOrderDto(order);
     }
 
+    // --- MÉTODOS PRIVADOS DE MAPEAMENTO ---
+
     private ProcedureCatalogResponseDTO toDto(ProcedureCatalog p) {
         return new ProcedureCatalogResponseDTO(
                 p.getCode(), p.getName(), p.getRequiredSpecialty(), p.getMinDurationMinutes(), p.getMaxDurationMinutes(), p.isMultiSession()
@@ -179,5 +182,39 @@ public class TreatmentService {
                 a.getDescription(),
                 a.getCreatedAt()
         );
+    }
+
+    /**
+     * Busca e formata os passos do progresso do tratamento para um paciente.
+     * @param patientCpf O CPF do paciente logado.
+     * @return Uma lista de PatientProgressDTO representando cada passo.
+     */
+    @Transactional(readOnly = true)
+    public List<PatientProgressDTO> getPatientProgressSteps(String patientCpf) {
+        List<ProcedureOrder> orders = orderRepository.findByPatient_CpfOrderByCreatedAtAsc(patientCpf);
+
+        AtomicInteger stepCounter = new AtomicInteger(1);
+
+        return orders.stream()
+                .map(order -> {
+                    String status;
+                    // Lógica para determinar o status com base no seu enum ProcedureOrderStatus
+                    if (order.getStatus() == ProcedureOrderStatus.COMPLETED) {
+                        status = "CONCLUDED";
+                    } else if (order.getStatus() == ProcedureOrderStatus.SCHEDULED) {
+                        status = "SCHEDULED";
+                    } else {
+                        // Por padrão, se não estiver concluído ou agendado, consideramos pendente
+                        status = "PENDING";
+                    }
+
+                    return new PatientProgressDTO(
+                            stepCounter.getAndIncrement(),
+                            order.getProcedure().getName(),
+                            order.getProcedure().getDescription(),
+                            status
+                    );
+                })
+                .collect(Collectors.toList());
     }
 }

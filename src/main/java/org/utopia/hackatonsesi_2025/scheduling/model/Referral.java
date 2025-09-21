@@ -34,7 +34,7 @@ public class Referral {
     @Column(name = "status", length = 20, nullable = false)
     private ReferralStatus status;
 
-    @Column(name = "reason", length = 255)
+    @Column(name = "reason", length = 500)
     private String reason;
 
     @Column(name = "created_at", nullable = false)

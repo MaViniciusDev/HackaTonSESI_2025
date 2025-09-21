@@ -17,8 +17,13 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 import org.utopia.hackatonsesi_2025.users.security.AppUserDetailsService;
 import org.utopia.hackatonsesi_2025.users.security.JwtAuthenticationFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableMethodSecurity
@@ -31,6 +36,7 @@ public class SecurityConfig {
                                             JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
         return http
                 .csrf(AbstractHttpConfigurer::disable)
+                .cors(cors -> {})
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authenticationProvider(inMemoryAuthProvider)
                 .authenticationProvider(jpaAuthProvider)
@@ -41,7 +47,7 @@ public class SecurityConfig {
 
                         .requestMatchers("/api/procedures/catalog").hasAnyRole("PATIENT","RECEPTION","DENTIST")
                         .requestMatchers("/api/procedures/schedule").hasAnyRole("PATIENT","RECEPTION")
-                         .requestMatchers("/api/procedures/orders/**").hasRole("DENTIST")
+                        .requestMatchers("/api/procedures/orders/**").hasRole("DENTIST")
 
                         .requestMatchers("/api/patients/self-register").hasRole("PATIENT")
                         .requestMatchers("/api/patients/intake").hasRole("RECEPTION")
@@ -104,5 +110,17 @@ public class SecurityConfig {
     @Bean
     AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
         return configuration.getAuthenticationManager();
+    }
+
+    @Bean
+    CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration config = new CorsConfiguration();
+        config.setAllowedOrigins(List.of("http://localhost:5173", "http://127.0.0.1:5173"));
+        config.setAllowedMethods(List.of("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowCredentials(true);
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**", config);
+        return source;
     }
 }

@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Painel do Paciente - SESI Saúde</title>
+    <link rel="stylesheet" href="dashboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<main-sidebar></main-sidebar>
+
+<main class="main-content">
+    <header class="page-header">
+        <button class="sidebar-toggle" aria-label="Abrir menu">
+            <i class="fas fa-bars"></i>
+        </button>
+
+        <div class="search-bar">
+            <i class="fas fa-search"></i>
+            <input type="text" placeholder="Pesquisar">
+        </div>
+        <div class="user-profile">
+            <i class="fas fa-user-circle"></i>
+        </div>
+    </header>
+
+    <h1 class="greeting">Olá, <span id="userName">...</span>!</h1>
+
+    <div class="dashboard-grid">
+        <div class="left-column">
+            <section class="featured-card">
+                <div class="card-content">
+                    <h3>Dia Mundial do Dentista</h3>
+                    <p>03/10</p>
+                </div>
+            </section>
+
+            <section class="progress-card">
+                <h2>Progresso no tratamento</h2>
+                <ul class="progress-steps" id="progressStepsList">
+                    <p>Carregando progresso...</p>
+                </ul>
+                <div class="progress-legend">
+                    <span><i class="fas fa-circle concluded"></i> Concluído</span>
+                    <span><i class="fas fa-circle marked"></i> Agendado</span>
+                    <span><i class="fas fa-circle desmarked"></i> Desmarcado</span>
+                    <span><i class="fas fa-circle pending"></i> Pendente</span>
+                </div>
+            </section>
+        </div>
+
+        <div class="right-column">
+            <section class="calendar-card">
+                <div class="calendar-header">
+                    <h2>Calendário</h2>
+                    <span id="calendarMonthYear">Carregando...</span>
+                </div>
+                <table>
+                    <thead>
+                    <tr>
+                        <th>Dom</th><th>Seg</th><th>Ter</th><th>Qua</th><th>Quin</th><th>Sex</th><th>Sab</th>
+                    </tr>
+                    </thead>
+                    <tbody id="calendarBody">
+                    </tbody>
+                </table>
+            </section>
+
+            <button class="appointments-cta">Agendar</button>
+
+            <section class="next-appointment-card">
+                <h3>Próxima consulta/procedimento</h3>
+                <div id="nextAppointmentContent">
+                    <p>Carregando...</p>
+                </div>
+                <button class="reschedule-btn">Remarcar</button>
+            </section>
+        </div>
+    </div>
+</main>
+
+<script src="../services/api.js" type="module"></script>
+<script src="../services/Sidebar.js" type="module"></script>
+<script src="../services/main.js" type="module"></script>
+<script src="dashboard.js" type="module"></script> </body>
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SESI Saúde - Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="header">
+    <img src="../assets/imgs/logo.png" alt="SESI Saúde" class="logo">
+</header>
+
+<main class="container">
+    <!-- ESQUERDA -->
+    <div class="left-side">
+        <img src="../assets/imgs/fotologin.png" alt="Imagem login">
+        <div class="labels">
+            <div class="label">SESI Saúde Odontológica</div>
+            <div class="label">SESI Saúde Ocupacional</div>
+        </div>
+    </div>
+
+    <!-- DIREITA -->
+    <div class="right-side">
+        <h2>Login</h2>
+        <form id="loginForm">
+            <input type="text" name="cpf" placeholder="CPF" required>
+            <input type="password" name="senha" placeholder="Senha" required>
+
+            <a href="#" class="forgot">Esqueceu a senha?</a>
+
+            <button type="submit" class="btn-primary">Entrar</button>
+
+            <p class="signup">
+                Não possui conta? <a href="#">clique aqui</a>
+            </p>
+
+            <button type="button" class="btn-secondary">Cadastre-se</button>
+        </form>
+    </div>
+</main>
+
+<script src="script.js"></script>
+</body>
+</html>

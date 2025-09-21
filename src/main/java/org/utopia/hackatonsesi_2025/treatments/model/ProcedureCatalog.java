@@ -40,5 +40,8 @@ public class ProcedureCatalog {
     @Column(name = "active", nullable = false)
     @Builder.Default
     private boolean active = true;
+
+    @Column(name = "description", length = 1000)
+    private String description;
 }
 

@@ -1,0 +1,360 @@
+/* ---- VARIÁVEIS GLOBAIS E RESET ---- */
+:root {
+    --teal: #06b6a9;
+    --blue-dark: #012b48;
+    --white: #ffffff;
+    --background-light: #f7fafc;
+    --text-primary: #2d3748;
+    --text-secondary: #718096;
+    --border-color: #e2e8f0;
+    --yellow: #facc15;
+    --red: #dc2626;
+    --gray: #a0aec0;
+}
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    font-family: 'Roboto', sans-serif;
+}
+
+body {
+    background-color: var(--background-light);
+}
+
+/* ---- LAYOUT PRINCIPAL ---- */
+.main-content {
+    width: 100%;
+    padding: 24px 48px;
+    position: relative;
+    transition: filter 0.3s ease-in-out;
+}
+
+/* Efeito de Overlay/Backdrop quando o menu está aberto */
+.main-content.sidebar-open::after {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999; /* Fica abaixo do menu, mas acima do conteúdo */
+}
+
+
+/* ---- CABEÇALHO ---- */
+.page-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    gap: 16px;
+}
+
+.sidebar-toggle {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    color: var(--text-primary);
+    cursor: pointer;
+
+    /* CORREÇÃO APLICADA AQUI */
+    position: relative;
+    z-index: 1001;
+}
+
+.search-bar {
+    display: flex;
+    align-items: center;
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 25px;
+    padding: 8px 16px;
+    width: 100%;
+    max-width: 450px;
+}
+
+.search-bar i {
+    color: var(--text-secondary);
+    margin-right: 8px;
+}
+
+.search-bar input {
+    border: none;
+    outline: none;
+    width: 100%;
+    font-size: 1rem;
+    background: none;
+}
+
+.user-profile {
+    flex-shrink: 0;
+}
+
+.user-profile i {
+    font-size: 2.2rem;
+    color: var(--teal);
+    cursor: pointer;
+}
+
+.greeting {
+    font-size: 2.5rem;
+    color: var(--text-primary);
+    margin-bottom: 32px;
+}
+
+/* ---- GRID DO DASHBOARD ---- */
+.dashboard-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+}
+
+/* ... (O restante do arquivo CSS continua exatamente o mesmo) ... */
+
+.left-column, .right-column {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.progress-card, .calendar-card, .next-appointment-card {
+    background: var(--white);
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.featured-card {
+    background-image: url('../assets/imgs/dentistadashboard.png');
+    background-color: var(--teal);
+    background-position: right bottom;
+    background-size: auto 100%;
+    background-repeat: no-repeat;
+    border-radius: 16px;
+    min-height: 250px;
+    display: flex;
+    align-items: center;
+    padding: 24px;
+    overflow: hidden;
+    position: relative;
+}
+
+.featured-card .card-content {
+    color: var(--white);
+    text-shadow: none;
+    width: 60%;
+    position: relative;
+    z-index: 2;
+}
+
+.featured-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 8px;
+}
+.featured-card p {
+    font-size: 1.2rem;
+}
+
+.progress-card h2 {
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    margin-bottom: 24px;
+}
+
+.progress-steps {
+    list-style: none;
+}
+
+.progress-step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px 0;
+    border-bottom: 1px solid var(--border-color);
+}
+.progress-step:last-child { border-bottom: none; }
+
+.step-number {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    color: var(--white);
+    flex-shrink: 0;
+}
+
+.step-info { flex-grow: 1; }
+.step-info strong { color: var(--text-primary); }
+.step-info p { color: var(--text-secondary); font-size: 0.9rem; }
+
+.details-btn {
+    background-color: var(--teal);
+    color: var(--white);
+    border: none;
+    border-radius: 20px;
+    padding: 8px 16px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.details-btn:hover { background-color: #05968d; }
+.details-btn:disabled {
+    background-color: var(--border-color);
+    color: var(--text-secondary);
+    cursor: not-allowed;
+}
+
+.progress-step.concluded .step-number { background-color: var(--teal); }
+.progress-step.marked .step-number { background-color: var(--yellow); }
+.progress-step.scheduled .step-number { background-color: var(--yellow); }
+.progress-step.pending .step-number { background-color: var(--gray); }
+
+.progress-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 24px;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+.progress-legend span { display: flex; align-items: center; }
+.progress-legend i { margin-right: 6px; font-size: 0.7rem; }
+.progress-legend .concluded { color: var(--teal); }
+.progress-legend .marked { color: var(--yellow); }
+.progress-legend .desmarked { color: var(--red); }
+.progress-legend .pending { color: var(--gray); }
+
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+.calendar-header h2 { font-size: 1.25rem; color: var(--text-primary); }
+.calendar-header span { color: var(--text-secondary); font-weight: 500;}
+
+.calendar-card table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+.calendar-card th, .calendar-card td {
+    padding: 8px;
+    width: 14.28%;
+}
+.calendar-card th { color: var(--text-secondary); font-weight: 500; }
+.calendar-card td { color: var(--text-primary); }
+
+.calendar-card td.other-month { color: var(--border-color); }
+.calendar-card td.today {
+    background-color: var(--blue-dark);
+    color: var(--white);
+    border-radius: 50%;
+    font-weight: 700;
+}
+.calendar-card td.scheduled-day {
+    background-color: var(--yellow);
+    color: var(--white);
+    border-radius: 50%;
+    font-weight: 700;
+    position: relative;
+    cursor: pointer;
+}
+.calendar-card td.completed-day {
+    background-color: var(--teal);
+    color: var(--white);
+    border-radius: 50%;
+    font-weight: 700;
+    position: relative;
+    cursor: pointer;
+}
+.calendar-card td[data-tooltip]::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    background-color: var(--blue-dark);
+    color: var(--white);
+    padding: 5px 10px;
+    border-radius: 5px;
+    font-size: 0.8rem;
+    white-space: nowrap;
+    z-index: 10;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s, visibility 0.2s;
+}
+.calendar-card td[data-tooltip]:hover::after {
+    opacity: 1;
+    visibility: visible;
+}
+
+.appointments-cta {
+    background: var(--teal);
+    color: var(--white);
+    border: none;
+    border-radius: 12px;
+    padding: 16px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.appointments-cta:hover { background-color: #05968d; }
+
+.next-appointment-card h3 {
+    font-size: 1rem;
+    margin-bottom: 12px;
+    color: var(--text-primary);
+}
+.next-appointment-card p {
+    color: var(--text-secondary);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+.next-appointment-card p strong { color: var(--text-primary); }
+
+.reschedule-btn {
+    background-color: var(--red);
+    color: var(--white);
+    border: none;
+    border-radius: 8px;
+    padding: 10px;
+    width: 100%;
+    margin-top: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+.reschedule-btn:hover { background-color: #b91c1c; }
+
+@media (max-width: 1200px) {
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+}
+@media (max-width: 768px) {
+    .main-content {
+        padding: 16px;
+    }
+
+    .search-bar {
+        display: none;
+    }
+
+    .page-header {
+        justify-content: space-between;
+    }
+
+    .greeting {
+        font-size: 2rem;
+    }
+}

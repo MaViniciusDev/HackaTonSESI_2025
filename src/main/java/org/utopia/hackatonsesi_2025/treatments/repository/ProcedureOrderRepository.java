@@ -7,5 +7,6 @@ import org.utopia.hackatonsesi_2025.treatments.model.ProcedureOrderStatus;
 
 public interface ProcedureOrderRepository extends JpaRepository<ProcedureOrder, Long> {
     List<ProcedureOrder> findByPatient_CpfAndStatus(String cpf, ProcedureOrderStatus status);
+    List<ProcedureOrder> findByPatient_CpfOrderByCreatedAtAsc(String cpf);
 }
 

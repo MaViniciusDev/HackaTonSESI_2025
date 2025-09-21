@@ -10,13 +10,15 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
         "org.utopia.hackatonsesi_2025.patients.repository",
         "org.utopia.hackatonsesi_2025.scheduling.repository",
         "org.utopia.hackatonsesi_2025.users.repository",
-        "org.utopia.hackatonsesi_2025.treatments.repository"
+        "org.utopia.hackatonsesi_2025.treatments.repository",
+        "org.utopia.hackatonsesi_2025.records.repository"
 })
 @EntityScan(basePackages = {
         "org.utopia.hackatonsesi_2025.patients.model",
         "org.utopia.hackatonsesi_2025.scheduling.model",
         "org.utopia.hackatonsesi_2025.users.model",
-        "org.utopia.hackatonsesi_2025.treatments.model"
+        "org.utopia.hackatonsesi_2025.treatments.model",
+        "org.utopia.hackatonsesi_2025.records.model"
 })
 public class Application {
     public static void main(String[] args) {
